@@ -221,6 +221,15 @@ def seed_raw_tables():
             script_path = '{0}/{1}'.format(RAW_SCRIPTS_FOLDER, filename)
             execute_biquery_script(script_path)
 
+def set_response(code, body):
+    '''
+    helper function to create response object
+    '''
+    resp = {}
+    resp['statusCode']=code
+    resp['body']=body
+    return resp
+
 def lambda_handler(event, context):
     '''
         ##############################################################################################
@@ -231,27 +240,37 @@ def lambda_handler(event, context):
         
         ##############################################################################################
     '''
-    # 1. generate master table of dependencies
-    master_table = build_master_table(schemas=['tmp', 'final'])
-    master_table_graph_sync = build_master_table_ordered_sync(master_table)
-    master_table_graph_levels = build_master_table_levels(master_table_graph_sync)
-    # 2. initialise big query datasets
-    #####initialise_dataset(DATASET_RAW)
-    initialise_dataset(DATASET_TMP)
-    initialise_dataset(DATASET_FINAL)
-    # seed raw tables
-    #####seed_raw_tables()
-    # 3. run master job
-    processor_count = get_max_parallel_run(master_table_graph_levels)
-    pool = Pool(processes=processor_count) # multi processing
-    max_level = master_table_graph_levels[len(master_table_graph_levels)-1].level
-    current_level = 1
-    while current_level <= max_level:
-        current_level_processes = []
-        for node in master_table_graph_levels:
-            if node.level == current_level:
-                current_level_processes.append(get_process(node))
-        #execute scripts for the level
-        print('\nBegin processing level {0} nodes...'.format(str(current_level)))
-        pool.map(execute_big_query_table_load, current_level_processes)
-        current_level += 1
+    try:
+        # 1. generate master table of dependencies
+        master_table = build_master_table(schemas=['tmp', 'final'])
+        master_table_graph_sync = build_master_table_ordered_sync(master_table)
+        master_table_graph_levels = build_master_table_levels(master_table_graph_sync)
+        # 2. initialise big query datasets
+        #initialise_dataset(DATASET_RAW)
+        initialise_dataset(DATASET_TMP)
+        initialise_dataset(DATASET_FINAL)
+        # seed raw tables
+        #seed_raw_tables()
+        # 3. run master job
+        processor_count = get_max_parallel_run(master_table_graph_levels)
+        pool = Pool(processes=processor_count) # multi processing
+        max_level = master_table_graph_levels[len(master_table_graph_levels)-1].level
+        current_level = 1
+        while current_level <= max_level:
+            current_level_processes = []
+            for node in master_table_graph_levels:
+                if node.level == current_level:
+                    current_level_processes.append(get_process(node))
+            #execute scripts for the level
+            print('\nBegin processing level {0} nodes...'.format(str(current_level)))
+            pool.map(execute_big_query_table_load, current_level_processes)
+            current_level += 1
+        response = set_response(200, 'Warehouse loaded successfully')
+    except Exception as ex:
+        response = set_response(500, ex)
+    return response
+
+if __name__ == '__main__':
+  event = {
+  }
+  lambda_handler(event, None)

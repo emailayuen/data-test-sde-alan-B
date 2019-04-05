@@ -27,6 +27,9 @@ def execute_biquery_insert(ds_name, tbl_name, rows_to_insert):
     return errors
 
 def set_response(code, body):
+    '''
+    helper function to create response object
+    '''
     resp = {}
     resp['statusCode']=code
     resp['body']=body
