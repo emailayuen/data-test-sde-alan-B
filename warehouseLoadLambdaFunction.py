@@ -175,9 +175,7 @@ def execute_big_query_table_load(script_path):
     with open('{0}/{1}/{2}'.format(SQL_SCRIPTS_ROOT_FOLDER, ds_id, tbl_script)) as f:
         content = f.readlines()
     query = ''.join(content)
-    ###############################################
     # start the query, passing in extra config
-    ###############################################
     query_job = client.query(
         query,
         location=LOCATION,
