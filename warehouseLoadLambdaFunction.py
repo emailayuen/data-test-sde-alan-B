@@ -221,7 +221,7 @@ def seed_raw_tables():
             script_path = '{0}/{1}'.format(RAW_SCRIPTS_FOLDER, filename)
             execute_biquery_script(script_path)
 
-if __name__ == '__main__':
+def lambda_handler(event, context):
     '''
         ##############################################################################################
         B.1
