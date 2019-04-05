@@ -23,10 +23,6 @@ def execute_biquery_insert(ds_name, tbl_name, rows_to_insert):
     ds_ref = client.dataset(ds_name)
     tbl_ref = ds_ref.table(tbl_name)
     table = client.get_table(tbl_ref)  # API call
-    #rows_to_insert = [
-    #    (u'Phred Phlyntstone', 32),
-    #    (u'Wylma Phlyntstone', 29),
-    #]
     errors = client.insert_rows(table, rows_to_insert)  # API request
     return errors
 
@@ -50,10 +46,6 @@ def lambda_handler(event, context):
         response = set_response(404, errors[0])
   except Exception as ex:
       response = set_response(500, ex)
-  #return {
-  #  'statusCode': 200,
-  #  'body': json.dumps(params)
-  #}
   return response
 
 if __name__ == '__main__':
