@@ -6,6 +6,7 @@ This is a working solution for Sephora SEA data test parts B2 and B3. Part A is 
 
 * [Python 3.7](https://www.python.org/downloads/) (3.6 should suffice but untested)
 * [Google BigQuery API client library for Python](https://cloud.google.com/bigquery/docs/reference/libraries)
+* Key file for service account to access Google Bigquery (...to be provided separately)
 
 ## Setup
 
@@ -20,7 +21,16 @@ To run the program...
   
   ```
   
-  2. To run, simply pass the warehouseLoadLambdaFunction.py program as an argument to the Python interpreter.
+  2. After key file is obtained, paste the key file into the key folder.
+  
+  ```
+  Example:
+  
+  Paste key file into: C:\git\data-test-sde-alan-B\key\
+  
+  ```
+  
+  3. To run, simply pass the warehouseLoadLambdaFunction.py program as an argument to the Python interpreter.
 
 ```
   Example:
