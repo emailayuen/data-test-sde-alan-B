@@ -1,4 +1,4 @@
-# Data Test A - Dependencies Orchestration
+# Data Test B - Deployment
 
 This is a working solution for Sephora SEA data test parts B2 and B3. Part A is available in the following repo: [data-test-sde-alan-A](https://github.com/emailayuen/data-test-sde-alan-A).
 
