@@ -32,8 +32,9 @@ To run the program...
   
   3. To run, simply pass the warehouseLoadLambdaFunction.py program as an argument to the Python interpreter.
 
-```
+  ```
   Example:
   
   C:\git\data-test-sde-alan-B>python warehouseLoadLambdaFunction.py
   
+  ```
