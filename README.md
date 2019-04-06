@@ -12,7 +12,7 @@ This is a working solution for Sephora SEA data test parts B2 and B3. Part A is 
 
 To run the program...
 
-  1. Pull down the source code to your local machine and navigate to the project folder.
+  1. Pull down the source code to your local machine and navigate to the main project folder.
   
   ```
   Example:
@@ -21,7 +21,7 @@ To run the program...
   
   ```
   
-  2. Once key file is obtained, paste the key file into the key folder directly under the project folder.
+  2. Once key file is obtained, paste the key file into the `key` folder directly under the main project folder.
   
   ```
   Example:
