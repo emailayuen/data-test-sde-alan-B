@@ -38,3 +38,30 @@ To run the program...
   C:\git\data-test-sde-alan-B>python warehouseLoadLambdaFunction.py
   
   ```
+
+## Setup with Custom Bigquery Instance
+
+To use your own Bigquery instance...
+
+1. Set up a project in Google Cloud and create a service account that can create, read and write into your custom Bigquery instance. Generate a key file for your service account.
+
+2. Place the key file into the `key` folder directly under the main project folder.
+
+  ```
+  Example:
+  
+  Paste key file into: C:\git\data-test-sde-alan-B\key\your_key_file.json
+  
+  ```
+3. For `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
+
+  ```
+  Example:
+  
+  PROJECT_ID = 'your-project-id'
+  KEY_FILE_PATH = 'key/your_key_file.json'
+  
+  ```
+4. For `warehouseInsertLambdaFunction.py`, do the same as step 3.
+
+  
