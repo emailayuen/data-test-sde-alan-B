@@ -3,9 +3,10 @@ This code is for Task B - Deployment
 """
 import os
 import re
-from multiprocessing import Pool
+import multiprocessing
 from google.cloud import bigquery
 from pathlib import Path
+import json
 
 #constants
 SQL_SCRIPTS_ROOT_FOLDER = 'res'
@@ -71,18 +72,18 @@ def resolve_dependency(node, resolved):
     if node not in resolved:
         resolved.append(node)
 
-def build_master_table_ordered_sync(master_table):
+def build_master_table_ordered_sync(master):
     '''
     return list of tables, respective dependencies and run sequence
     '''
     # create nodes
     table_node_dict = {}
-    for table_name in master_table:
+    for table_name in master:
         table_node_dict[table_name] = Node(table_name, None)
     # add edges to nodes
-    for table_name in master_table:
+    for table_name in master:
         node = table_node_dict.get(table_name)
-        edges = master_table.get(table_name, None)
+        edges = master.get(table_name, None)
         if edges:
             for edge_str in edges:
                 node.addEdge(table_node_dict.get(edge_str))
@@ -92,42 +93,33 @@ def build_master_table_ordered_sync(master_table):
         resolve_dependency(table_node_dict[table_node], table_node_ordered) 
     return table_node_ordered
 
-def get_process(node):
+def get_process_path(node, root, ext):
+    '''
+    helper that returns the full path of table script
+    '''
     node_name_split = node.name.split('.')
-    return '{0}/{1}/{2}.{3}'.format(SQL_SCRIPTS_ROOT_FOLDER, node_name_split[0], node_name_split[1], SQL_SCRIPTS_EXT)
+    return '{0}/{1}/{2}.{3}'.format(root, node_name_split[0], node_name_split[1], ext)
 
-def build_master_table_levels(master_table_graph):
+def build_master_table_levels(master):
     '''
     algorithm that assigns a "level" to a node based on dependencies
     '''
     current_level = 1
     #1. set level for root tables (tables without any dependencies)
-    for node in master_table_graph:
+    for node in master:
         if len(node.edges) == 0:
             node.level = current_level
     #2. set level for tables with dependencies
-    while len([node.name for node in master_table_graph if node.level is None]) > 0:
-        processed_level_tables = [level_node.name for level_node in master_table_graph if (level_node.level is not None and level_node.level <= current_level)]
-        for node in master_table_graph:
+    while len([node.name for node in master if node.level is None]) > 0:
+        processed_level_tables = [level_node.name for level_node in master if (level_node.level is not None and level_node.level <= current_level)]
+        for node in master:
             if node.level is None:
                 node_edges = [e.name for e in node.edges]
                 complete_match =  all(elem in processed_level_tables for elem in node_edges)
                 if complete_match:
                     node.level = current_level + 1
         current_level += 1
-    return master_table_graph
-
-def get_max_parallel_run(master_list):
-    '''
-    derive max number of processes that will run at any one time
-    '''
-    jobs = []
-    [jobs.append(node.level) for node in master_list]
-    freq = {} 
-    for items in jobs: 
-        freq[items] = jobs.count(items)
-    max_key = max(freq, key=freq.get)
-    return freq[max_key]
+    return master
 
 def get_biquery_client():
     '''
@@ -217,7 +209,31 @@ def set_response(code, body):
     resp = {}
     resp['statusCode']=code
     resp['body']=body
-    return resp
+    return json.dumps(resp)
+
+def execute_jobs(master):
+    '''
+    Function that will execute the warehouse load based on master table
+    Will utilise parallel at each "level"
+    '''
+    max_level = master[len(master)-1].level
+    current_level = 1
+    running_processes = []
+    while current_level <= max_level:
+        current_level_tables = []
+        for node in master:
+            if node.level == current_level:
+                current_level_tables.append(get_process_path(node, SQL_SCRIPTS_ROOT_FOLDER, SQL_SCRIPTS_EXT))
+        #execute processes for the level
+        print('\nBegin processing level {0} nodes...'.format(str(current_level)))
+        for table in current_level_tables:
+            process = multiprocessing.Process(target=execute_big_query_table_load, args=(table,))
+            running_processes.append(process)
+            process.start()
+        # wait for processes to finish
+        for running_process in running_processes:
+            running_process.join()
+        current_level += 1
 
 def lambda_handler(event, context):
     '''
@@ -235,28 +251,15 @@ def lambda_handler(event, context):
         master_table_graph_sync = build_master_table_ordered_sync(master_table)
         master_table_graph_levels = build_master_table_levels(master_table_graph_sync)
         # 2. initialise big query datasets
-        #initialise_dataset(DATASET_RAW) -- UNCOMMENT TO INCLUDE RAW
+        #initialise_dataset(DATASET_RAW) #---UNCOMMENT TO INCLUDE RAW
         initialise_dataset(DATASET_TMP)
         initialise_dataset(DATASET_FINAL)
-        # seed raw tables
-        #seed_raw_tables() -- UNCOMMENT TO INCLUDE RAW
-        # 3. run master job
-        processor_count = get_max_parallel_run(master_table_graph_levels)
-        pool = Pool(processes=processor_count) # multi processing
-        max_level = master_table_graph_levels[len(master_table_graph_levels)-1].level
-        current_level = 1
-        while current_level <= max_level:
-            current_level_processes = []
-            for node in master_table_graph_levels:
-                if node.level == current_level:
-                    current_level_processes.append(get_process(node))
-            #execute scripts for the level
-            print('\nBegin processing level {0} nodes...'.format(str(current_level)))
-            pool.map(execute_big_query_table_load, current_level_processes)
-            current_level += 1
+        #seed_raw_tables() #---UNCOMMENT TO INCLUDE RAW
+        # 3. run master job to load warehouse
+        execute_jobs(master_table_graph_levels)
         response = set_response(200, 'Warehouse loaded successfully')
     except Exception as ex:
-        response = set_response(500, ex)
+        response = set_response(500, str(ex))
     return response
 
 if __name__ == '__main__':

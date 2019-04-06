@@ -33,7 +33,7 @@ def set_response(code, body):
     resp = {}
     resp['statusCode']=code
     resp['body']=body
-    return resp
+    return json.dumps(resp)
 
 def lambda_handler(event, context):
   try:
@@ -48,11 +48,10 @@ def lambda_handler(event, context):
     else:
         response = set_response(404, errors[0])
   except Exception as ex:
-      response = set_response(500, ex)
+      response = set_response(500, str(ex))
   return response
 
 if __name__ == '__main__':
-  '''
   event = {
     "queryStringParameters": {
       "category_id": "4", 
@@ -70,4 +69,5 @@ if __name__ == '__main__':
       "table_name": "inventory_items"
     }
   }
+  '''
   lambda_handler(event, None)
