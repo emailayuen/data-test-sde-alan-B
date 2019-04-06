@@ -32,8 +32,8 @@ def set_response(code, body):
     '''
     resp = {}
     resp['statusCode']=code
-    resp['body']=body
-    return json.dumps(resp)
+    resp['body']=json.dumps(body)
+    return resp
 
 def lambda_handler(event, context):
   try:
