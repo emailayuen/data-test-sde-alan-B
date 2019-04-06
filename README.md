@@ -21,7 +21,7 @@ To run the program...
   
   ```
   
-  2. After key file is obtained, paste the key file into the key folder.
+  2. Once key file is obtained, paste the key file into the key folder directly under the project folder.
   
   ```
   Example:
