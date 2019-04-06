@@ -19,11 +19,9 @@ def execute_biquery_insert(ds_name, tbl_name, rows_to_insert):
     wrapper to execute bigquery table insert
     '''
     client = get_biquery_client()
-    # Prepares a reference to the dataset
-    ds_ref = client.dataset(ds_name)
-    tbl_ref = ds_ref.table(tbl_name)
+    tbl_ref = client.dataset(ds_name).table(tbl_name)
     table = client.get_table(tbl_ref)  # API call
-    errors = client.insert_rows(table, rows_to_insert)  # API request
+    errors = client.insert_rows(table, rows_to_insert) # API request
     return errors
 
 def set_response(code, body):
@@ -64,8 +62,8 @@ if __name__ == '__main__':
   '''
   event = {
     "queryStringParameters": {
-      "sku_id": "7777", 
-      "inventory_count": "77", 
+      "sku_id": "1234", 
+      "inventory_count": "1234", 
       "table_name": "inventory_items"
     }
   }
