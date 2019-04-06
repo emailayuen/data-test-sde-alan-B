@@ -5,7 +5,10 @@ This is a working solution for Sephora SEA data test parts B2 and B3. Part A is 
 ## Requirements
 
 * Python 3.7 (3.6 should suffice but untested)
-* [Python client library for Google BigQuery API](https://cloud.google.com/bigquery/docs/reference/libraries) 
+* Google BigQuery API client library for Python
 
 ## Setup
 
+To run the code, please following the instructions below.
+
+  1. If you do not have a working Python 3.7 interpreter, instructions to download and setup can be found [here](https://www.python.org/downloads/).
