@@ -235,11 +235,11 @@ def lambda_handler(event, context):
         master_table_graph_sync = build_master_table_ordered_sync(master_table)
         master_table_graph_levels = build_master_table_levels(master_table_graph_sync)
         # 2. initialise big query datasets
-        initialise_dataset(DATASET_RAW)
+        #initialise_dataset(DATASET_RAW) -- UNCOMMENT TO INCLUDE RAW
         initialise_dataset(DATASET_TMP)
         initialise_dataset(DATASET_FINAL)
         # seed raw tables
-        seed_raw_tables()
+        #seed_raw_tables() -- UNCOMMENT TO INCLUDE RAW
         # 3. run master job
         processor_count = get_max_parallel_run(master_table_graph_levels)
         pool = Pool(processes=processor_count) # multi processing
