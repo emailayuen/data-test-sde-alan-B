@@ -5,6 +5,7 @@ import os
 import re
 from multiprocessing import Pool
 from google.cloud import bigquery
+from pathlib import Path
 
 #constants
 SQL_SCRIPTS_ROOT_FOLDER = 'res'
@@ -18,72 +19,62 @@ DATASET_RAW = 'raw'
 DATASET_TMP = 'tmp'
 DATASET_FINAL = 'final'
 
+def extrapolate_tables(content, schemas):
+    '''
+    function that finds dependent tables from sql statement
+    assumes tables are identified by surrounding "`" character in sql
+    '''
+    tables = re.findall(r"`(.*?)`", content, re.DOTALL)
+    dependent_table=[]
+    for table in tables:
+        schema = table.split('.')[0]
+        if schema in schemas:
+            dependent_table.append(table)
+    return dependent_table
+
 def build_master_table(schemas):
     '''
     return list of tables and respective dependencies
     '''
     master={}
-    def extrapolate_tables(content):
-        '''
-        function that finds dependent tables from sql statement
-        assumes tables are identified by surrounding "`" character in sql
-        '''
-        tables = re.findall(r"`(.*?)`", content, re.DOTALL)
-        dependent_table=[]
-        for table in tables:
-            schema = table.split('.')[0]
-            if schema in schemas:
-                dependent_table.append(table)
-        return dependent_table
-
-    # get sql files
-    sql_script_path=[]
-    for root, dirs, files in os.walk(SQL_SCRIPTS_ROOT_FOLDER):
-        dirs[:] = [d for d in dirs if d in SQL_SCRIPTS_DIR] #ignore raw
-        for file in files:
-            path=os.path.join(root,file)
-            sql_script_path.append(path)
-    # open sql files and extrapolates dependant tables
-    for path in sql_script_path:
-        path_split = path.split('\\')
-        parent_folder = path_split[len(path_split)-2]
-        file = path_split[len(path_split)-1]
-        file_name = file.split('.')[0]
-        table='{0}.{1}'.format(parent_folder, file_name)
-        with open(path) as f:
-            content = f.readlines()
-        sql_content = ''.join(content)
-        master[table] = extrapolate_tables(sql_content)
+    working_dir = Path.cwd()
+    for ds in SQL_SCRIPTS_DIR:
+        for file in working_dir.glob('{0}/{1}/*.*'.format(SQL_SCRIPTS_ROOT_FOLDER, ds)):
+            table='{0}.{1}'.format(ds, file.stem)
+            with open(file) as f:
+                content = f.readlines()
+            sql_content = ''.join(content)
+            master[table] = extrapolate_tables(sql_content, schemas)
     return master
+
+class Node:
+    '''
+    class object representing a graph data structure (nodes and edges)
+    in this instance, an edge from one node to another represents dependency
+    '''
+    def __init__(self, name, level):
+        self.name = name
+        self.level = level
+        self.edges = []
+    
+    def addEdge(self, node):
+        self.edges.append(node)
+
+def resolve_dependency(node, resolved):
+    '''
+    recursive algorithm that traverses through each node and their dependencies
+    returns synchronous run order
+    '''
+    for edge in node.edges:
+        if edge not in resolved:
+            resolve_dependency(edge, resolved)
+    if node not in resolved:
+        resolved.append(node)
 
 def build_master_table_ordered_sync(master_table):
     '''
     return list of tables, respective dependencies and run sequence
     '''
-    class Node:
-        '''
-        class object representing a graph data structure (nodes and edges)
-        in this instance, an edge from one node to another represents dependency
-        '''
-        def __init__(self, name, level):
-            self.name = name
-            self.level = level
-            self.edges = []
-    
-        def addEdge(self, node):
-            self.edges.append(node)
-
-    def resolve_dependency(node, resolved):
-        '''
-        recursive algorithm that traverses through each node and their dependencies
-        returns synchronous run order
-        '''
-        for edge in node.edges:
-            if edge not in resolved:
-                resolve_dependency(edge, resolved)
-        if node not in resolved:
-            resolved.append(node)
-
     # create nodes
     table_node_dict = {}
     for table_name in master_table:
@@ -244,11 +235,11 @@ def lambda_handler(event, context):
         master_table_graph_sync = build_master_table_ordered_sync(master_table)
         master_table_graph_levels = build_master_table_levels(master_table_graph_sync)
         # 2. initialise big query datasets
-        #initialise_dataset(DATASET_RAW)
+        initialise_dataset(DATASET_RAW)
         initialise_dataset(DATASET_TMP)
         initialise_dataset(DATASET_FINAL)
         # seed raw tables
-        #seed_raw_tables()
+        seed_raw_tables()
         # 3. run master job
         processor_count = get_max_parallel_run(master_table_graph_levels)
         pool = Pool(processes=processor_count) # multi processing
