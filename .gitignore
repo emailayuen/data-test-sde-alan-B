@@ -1,3 +1,4 @@
-key/
+key/*
+!key/.gitkeep
 package/
 *.zip

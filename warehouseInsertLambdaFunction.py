@@ -4,7 +4,7 @@ import os
 import json
 
 PROJECT_ID = 'data-test-sde'
-KEY_FILE_PATH = 'key/data-test-sde-f4c4c4a2b7da.json'
+KEY_FILE_PATH = 'key/data-test-sde-app-key.json'
 DATASET_RAW = 'raw'
 
 def get_biquery_client():
@@ -59,13 +59,4 @@ if __name__ == '__main__':
       "type": "product"
     }
   }
-  '''
-  event = {
-    "queryStringParameters": {
-      "sku_id": "1234", 
-      "inventory_count": "1234", 
-      "table_name": "inventory_items"
-    }
-  }
-  '''
   lambda_handler(event, None)
