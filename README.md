@@ -12,7 +12,16 @@ This is a working solution for Sephora SEA data test parts B2 and B3. Part A is 
 
 To run the program...
 
-  1. Pull down the source code to your local machine and navigate to the main project folder.
+1. Install the Google Bigquery client library in a terminal.
+  
+  ```
+  Example:
+  
+  pip install --upgrade google-cloud-bigquery
+  
+  ```
+  
+2. Pull down the source code to your local machine and navigate to the main project folder.
   
   ```
   Example:
@@ -21,7 +30,7 @@ To run the program...
   
   ```
   
-  2. Once key file is obtained, paste the key file into the `key` folder directly under the main project folder.
+3. Once key file is obtained, paste the key file into the `key` folder directly under the main project folder. This is required to authenticate with Google Bigquery instance.
   
   ```
   Example:
@@ -30,7 +39,7 @@ To run the program...
   
   ```
   
-  3. To run, simply pass the warehouseLoadLambdaFunction.py program as an argument to the Python interpreter.
+  4. To run, simply pass the warehouseLoadLambdaFunction.py program as an argument to the Python interpreter.
 
   ```
   Example:
@@ -41,11 +50,13 @@ To run the program...
 
 ## Setup with Custom Bigquery Instance
 
-To use your own Bigquery instance...
+You can also use your own Bigquery instance if desired...
 
-1. Set up a project in Google Cloud and create a service account that can create, read and write into your custom Bigquery instance. Generate a key file for your service account.
+1. Repeat steps 1-2 above.
 
-2. Place the key file into the `key` folder directly under the main project folder.
+2. Set up a project in Google Cloud and create a service account that can create, read and write into your custom Bigquery instance. Generate a key file for your service account.
+
+3. Place the key file into the `key` folder directly under the main project folder.
 
   ```
   Example:
@@ -53,7 +64,7 @@ To use your own Bigquery instance...
   Paste key file into: C:\git\data-test-sde-alan-B\key\your_key_file.json
   
   ```
-3. For `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
+4. For `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
 
   ```
   Example:
