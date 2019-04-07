@@ -47,6 +47,7 @@ def lambda_handler(event, context):
         response = set_response(404, errors[0])
   except Exception as ex:
       response = set_response(500, str(ex))
+  print(response)
   return response
 
 if __name__ == '__main__':

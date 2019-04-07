@@ -251,15 +251,16 @@ def lambda_handler(event, context):
         master_table_graph_sync = build_master_table_ordered_sync(master_table)
         master_table_graph_levels = build_master_table_levels(master_table_graph_sync)
         # 2. initialise big query datasets
-        #initialise_dataset(DATASET_RAW) #---UNCOMMENT TO INCLUDE RAW
+        #initialise_dataset(DATASET_RAW)
         initialise_dataset(DATASET_TMP)
         initialise_dataset(DATASET_FINAL)
-        #seed_raw_tables() #---UNCOMMENT TO INCLUDE RAW
+        #seed_raw_tables()
         # 3. run master job to load warehouse
         execute_jobs(master_table_graph_levels)
         response = set_response(200, 'Warehouse loaded successfully')
     except Exception as ex:
         response = set_response(500, str(ex))
+    print(response)
     return response
 
 if __name__ == '__main__':
