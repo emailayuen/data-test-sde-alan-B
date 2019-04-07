@@ -67,7 +67,7 @@ You can also use your own Bigquery instance if desired...
   
   C:\git\data-test-sde-alan-B\key\[your_custom_key_file.json]
   ```
-4. For `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
+4. Inside the code for `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
 
   ```
   Example:
@@ -75,6 +75,6 @@ You can also use your own Bigquery instance if desired...
   PROJECT_ID = '[your_custom_project_id]'
   KEY_FILE_PATH = 'key/[your_custom_key_file.json]'
   ```
-5. For `warehouseInsertLambdaFunction.py`, do the same as step 4.
+5. For `warehouseInsertLambdaFunction.py`, do the same as step 4. The same constant variables are also available in this code base.
 
   
