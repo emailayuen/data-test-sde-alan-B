@@ -54,14 +54,14 @@ You can also use your own Bigquery instance if desired...
 
 1. Repeat steps 1-2 above.
 
-2. Set up a project in Google Cloud and create a service account that can create, read and write into your custom Bigquery instance. Generate a key file for your service account.
+2. Set up a project in Google Cloud and create a service account that can create, read and write into your custom Bigquery instance. Generate a `key file` for your service account.
 
-3. Place the key file into the `key` folder directly under the main project folder.
+3. Place your custom `key file` into the `key` folder directly under the main project folder.
 
   ```
   Example:
   
-  Paste key file into: C:\git\data-test-sde-alan-B\key\your_key_file.json
+  Paste key file into: C:\git\data-test-sde-alan-B\key\your_custom_key_file.json
   
   ```
 4. For `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
@@ -69,10 +69,10 @@ You can also use your own Bigquery instance if desired...
   ```
   Example:
   
-  PROJECT_ID = 'your-project-id'
-  KEY_FILE_PATH = 'key/your_key_file.json'
+  PROJECT_ID = 'your_custom_project_id'
+  KEY_FILE_PATH = 'key/your_custom_key_file.json'
   
   ```
-4. For `warehouseInsertLambdaFunction.py`, do the same as step 3.
+5. For `warehouseInsertLambdaFunction.py`, do the same as step 4.
 
   
