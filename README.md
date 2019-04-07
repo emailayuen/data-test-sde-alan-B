@@ -75,6 +75,6 @@ You can also use your own Bigquery instance if desired...
   PROJECT_ID = '[your_custom_project_id]'
   KEY_FILE_PATH = 'key/[your_custom_key_file.json]'
   ```
-5. For `warehouseInsertLambdaFunction.py`, do the same as step 4. The same constant variables are also available in this code base.
+5. For `warehouseInsertLambdaFunction.py`, do the same as step 4. The identical constant variables are also available in this code base.
 
   
