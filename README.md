@@ -69,8 +69,8 @@ You can also use your own Bigquery instance if desired...
   ```
   Example:
   
-  PROJECT_ID = 'your_custom_project_id'
-  KEY_FILE_PATH = 'key/your_custom_key_file.json'
+  PROJECT_ID = '[your_custom_project_id]'
+  KEY_FILE_PATH = 'key/[your_custom_key_file.json]'
   
   ```
 5. For `warehouseInsertLambdaFunction.py`, do the same as step 4.
