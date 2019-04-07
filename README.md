@@ -9,7 +9,7 @@ B3: Expose API endpoints using 2 x AWS services: API Gatway + Lambda (serverless
 
 ## Deploy and Run Locally
 
-### Prerequitsites
+### Prerequisites
 
 * [Python 3.7](https://www.python.org/downloads/) (3.6 should suffice but untested)
 * [Google BigQuery API client library for Python](https://cloud.google.com/bigquery/docs/reference/libraries)
