@@ -2,13 +2,15 @@
 
 This is a working solution for Sephora SEA data test parts B2 and B3. Part A is available in the following repo: [data-test-sde-alan-A](https://github.com/emailayuen/data-test-sde-alan-A).
 
-## Prerequitsites
+## Deploy and Run Locally
+
+### Prerequitsites
 
 * [Python 3.7](https://www.python.org/downloads/) (3.6 should suffice but untested)
 * [Google BigQuery API client library for Python](https://cloud.google.com/bigquery/docs/reference/libraries)
 * Key file for service account to access Google Bigquery (...to be provided separately)
 
-## Setup
+### Setup
 
 To run the program...
 
@@ -45,7 +47,7 @@ To run the program...
   C:\git\data-test-sde-alan-B>python warehouseLoadLambdaFunction.py
   ```
 
-## Setup with Custom Bigquery Instance
+### Setup with Custom Bigquery Instance
 
 You can also use your own Bigquery instance if desired...
 
