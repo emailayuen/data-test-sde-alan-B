@@ -35,7 +35,7 @@ To run the program...
   cd C:\git\data-test-sde-alan-B
   ```
   
-3. Once key file is obtained, paste the key file into the `key` folder directly under the main project folder. This is required to authenticate with Google Bigquery instance.
+3. Assuming key file has been provided to you, paste the file into the `key` folder directly under the main project folder. This is required to authenticate with Google Bigquery instance.
   
   ```
   Example:
