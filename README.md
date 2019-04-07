@@ -18,7 +18,6 @@ To run the program...
   Example:
   
   pip install --upgrade google-cloud-bigquery
-  
   ```
   
 2. Pull down the source code to your local machine and navigate to the main project folder.
@@ -27,7 +26,6 @@ To run the program...
   Example:
   
   cd C:\git\data-test-sde-alan-B
-  
   ```
   
 3. Once key file is obtained, paste the key file into the `key` folder directly under the main project folder. This is required to authenticate with Google Bigquery instance.
@@ -45,7 +43,6 @@ To run the program...
   Example:
   
   C:\git\data-test-sde-alan-B>python warehouseLoadLambdaFunction.py
-  
   ```
 
 ## Setup with Custom Bigquery Instance
@@ -62,7 +59,6 @@ You can also use your own Bigquery instance if desired...
   Example:
   
   C:\git\data-test-sde-alan-B\key\[your_custom_key_file.json]
-  
   ```
 4. For `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
 
@@ -71,7 +67,6 @@ You can also use your own Bigquery instance if desired...
   
   PROJECT_ID = '[your_custom_project_id]'
   KEY_FILE_PATH = 'key/[your_custom_key_file.json]'
-  
   ```
 5. For `warehouseInsertLambdaFunction.py`, do the same as step 4.
 
