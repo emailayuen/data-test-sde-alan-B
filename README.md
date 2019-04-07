@@ -35,7 +35,7 @@ To run the program...
   ```
   Example:
   
-  Paste key file into: C:\git\data-test-sde-alan-B\key\
+  Paste key file into: C:\git\data-test-sde-alan-B\key\[data-test-sde-app-key.json]
   
   ```
   
@@ -61,7 +61,7 @@ You can also use your own Bigquery instance if desired...
   ```
   Example:
   
-  C:\git\data-test-sde-alan-B\key\your_custom_key_file.json
+  C:\git\data-test-sde-alan-B\key\[your_custom_key_file.json]
   
   ```
 4. For `warehouseLoadLambdaFunction.py`, modify the constant variables `PROJECT_ID` and `KEY_FILE_PATH` with respective details of your custom Bigquery instance
