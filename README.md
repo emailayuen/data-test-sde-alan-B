@@ -3,7 +3,7 @@
 This is a working solution for Sephora SEA data test parts B2 and B3. Part A is available in the following repo: [data-test-sde-alan-A](https://github.com/emailayuen/data-test-sde-alan-A).
 
 ## Approach
-B2: Use same code base created for section A, but swap out fake scripts with real SQL scripts that will be run against Google Bigquery.
+B2: Utilise the same code base created in section A, but swap out fake scripts with real SQL scripts that will be run against Google Bigquery.
 
 B3: Expose API endpoints using 2 x AWS services: API Gatway + Lambda (serverless code)
 
