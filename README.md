@@ -35,7 +35,7 @@ To run the program...
   ```
   Example:
   
-  Paste key file into: C:\git\data-test-sde-alan-B\key\[data-test-sde-app-key.json]
+  C:\git\data-test-sde-alan-B\key\[data-test-sde-app-key.json]
   
   ```
   
